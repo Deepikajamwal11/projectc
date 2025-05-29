@@ -1,0 +1,91 @@
+<div class="main-menu menu-fixed menu-light menu-accordion menu-shadow " id='sidebar-menu' data-scroll-to-active="true">
+    <div class="navbar-header expanded">
+        <ul class="nav navbar-nav flex-row">
+            <li class="nav-item me-auto"><a class="navbar-brand" href="/dashboard"><span class="brand-logo">
+                       <img src="./../app-assets/images/icon1.png" alt="">
+                    </span>
+                    <!-- <h2 class="brand-text">Construction</h2> -->
+                </a></li>
+            <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pe-0" data-bs-toggle="collapse"><i class="d-block d-xl-none text-primary toggle-icon font-medium-4" data-feather="x"></i><i class="d-none d-xl-block collapse-toggle-icon font-medium-4  text-primary" data-feather="disc" data-ticon="disc"></i></a></li>
+        </ul>
+    </div>
+    <div class="shadow-bottom"></div>
+    <div class="main-menu-content">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+            <li class="nav-item <%= ['Dashboard'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/dashboard">
+                    <i data-feather="home"></i>
+                    <span class="menu-title text-truncate" data-i18n="carrier">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item <%= ['Employees','Employee Details','Add Employee','Edit Employee'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/employeelist">
+                    <i data-feather="users"></i>
+                    <span class="menu-title text-truncate" data-i18n="user">Employees</span>
+                </a>
+            </li>
+            <li class="nav-item <%= ['Projects','Project Details','Add Project','Edit Project','Assigned Users','Assign User Details'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/projectlist">
+                    <i data-feather="folder"></i>
+                    <span class="menu-title text-truncate" data-i18n="user">Project Sites</span>
+                </a>
+            </li>
+            <li class="nav-item <%= ['Project Tasks','Project Task Details','projectTaskEdit','Add Project Task'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/tasklist">
+                    <i data-feather="check-square"></i>
+                    <span class="menu-title text-truncate" data-i18n="user">Project Tasks</span>
+                </a>
+            </li>
+
+            <li class="nav-item <%= ['Project Sub Tasks','Project Sub Task Details','Add Sub Task'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/subtasklist">
+                    <i data-feather="list"></i>
+                    <span class="menu-title text-truncate" data-i18n="user">Project Sub Tasks</span>
+                </a>
+            </li>
+
+            <li class="nav-item <%= ['Describe Works','Describe Work Details','Add Describe Work','Edit Describe Work'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/describeworklist">
+                    <i data-feather="clipboard"></i>
+                    <span class="menu-title text-truncate" data-i18n="carrier">Describe Works</span>
+                </a>
+            </li>
+            <li class="nav-item <%= ['Records','Record Details'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/recordlist">
+                    <i data-feather="file-text"></i>
+                    <span class="menu-title text-truncate" data-i18n="carrier">Records</span>
+                </a>
+            </li>
+        
+            <li class="nav-item <%= ['Contact Us','Contact Details',].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/contacts">
+                    <i data-feather="phone"></i>
+                    <span class="menu-title text-truncate" data-i18n="carrier">Contact Us</span>
+                </a>
+            </li>
+           
+            
+            <li class="nav-item <%= ['Privacy Policy'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/privacypolicy">
+                    <i data-feather="lock"></i>
+                    <span class="menu-title text-truncate" data-i18n="carrier">Privacy Policy</span>
+                </a>
+            </li>
+            <li class="nav-item <%= ['About Us'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/aboutus">
+                    <i data-feather="info"></i>
+                    <span class="menu-title text-truncate" data-i18n="carrier">About Us</span>
+                </a>
+            </li>
+
+            <li class="nav-item <%= ['Terms & Conditions'].includes(title) ? 'active' : '' %>">
+                <a class="d-flex align-items-center" href="/term&conditions">
+                    <i data-feather="file-text"></i>
+                    <span class="menu-title text-truncate" data-i18n="carrier">Terms & Conditions</span>
+                </a>
+            </li>
+         
+        </ul>
+    </div>
+   
+</div>

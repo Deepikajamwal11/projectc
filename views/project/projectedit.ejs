@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<%- include('../common/header.ejs'); %>
+
+<body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click"
+  data-menu="vertical-menu-modern" data-col="">
+
+  <%- include('../common/navbar.ejs'); %>
+  <%- include('../common/sidebar.ejs'); %>
+
+  <div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper">
+      <div class="content-body">
+        <div class="auth-wrapper">
+          <div class="auth-inner py-2">
+            <div class="card mb-0">
+              <div class="card-body">
+                <form id="validate" class="auth-register-form" action="/projectupdate/<%= project.id %>" method="POST"
+                  enctype="multipart/form-data" novalidate>
+
+
+                  <div class="mb-1 mx-auto" style="width: 300px; height: 300px; position: relative; border-radius: 10px; overflow: hidden;">
+                    <% if (project.image) { %>
+                        <img src="<%= project.image %>" id="imagePreview" alt="Project Image" style="width: 100%; height: 100%; object-fit: cover;">
+                    <% } else { %>
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f0f0f0; border: 1px solid #ddd;">
+                            <span>No Image</span>
+                        </div>
+                    <% } %>
+                    <div class="icon-overlay position-absolute d-flex align-items-center justify-content-center" style="bottom: 10px; right: 10px; cursor: pointer;" onclick="document.getElementById('image').click();">
+                        <i class="fa-solid fa-pencil-alt edit-icon" style="font-size: 24px; color: white; background: rgba(6, 6, 6, 0.5); padding: 8px; border-radius: 50%;"></i>
+                    </div>
+                    <input type="file" id="image" name="image" accept="image/*" style="display: none;" onchange="previewImage(event)" />
+                  </div>
+
+               
+                  <div class="mb-1">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter name"
+                      minlength="2" maxlength="50" required
+                      value="<%= project.name %>"
+                      oninput="this.value = this.value.replace(/^\s+/g, '');" />
+                    <div class="invalid-feedback">Please enter a project name.</div>
+                  </div>
+
+                  <div class="mb-1">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" placeholder="Enter location"
+                      minlength="2" maxlength="50" oninput="this.value = this.value.replace(/^\s+/g, '');" required value="<%= project.location %>" />
+                    <div class="invalid-feedback">Please enter a location.</div>
+                  </div>
+
+                 
+                  <div class="mb-1">
+                    <label for="discription" class="form-label">Description</label>
+                    <textarea class="form-control" id="discription" name="discription" rows="4"
+                      minlength="2" maxlength="500" oninput="this.value = this.value.replace(/^\s+/g, '');" required><%= project.discription %></textarea>
+                    <div class="invalid-feedback">Please enter a description.</div>
+                  </div>
+                  
+
+                  <div class="mb-1 mt-3">
+                    <label for="userIds" class="form-label">Assign Users</label>
+                    <select id="userIds" name="userIds" class="form-control select2" multiple required>
+                      <% allUsers.forEach(user => { %>
+                        <option value="<%= user.id %>" <%= assignedUserIds.includes(user.id) ? 'selected' : '' %>><%= user.name %></option>
+                      <% }) %>
+                    </select>
+                    <div class="invalid-feedback">Please select at least one user.</div>
+                  </div>
+
+             
+                  <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary mx-2">Update</button>
+                    <a class="btn btn-secondary" href="/projectlist">Back</a>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../common/footer.ejs'); %>
+
+  <!-- JS & Select2 -->
+  <script src="../../../app-assets/vendors/js/vendors.min.js"></script>
+  <script src="../../../app-assets/js/core/app-menu.js"></script>
+  <script src="../../../app-assets/js/core/app.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $('#userIds').select2({
+        placeholder: "Select users",
+        allowClear: true,
+        width: '100%'
+      });
+    });
+
+    // Form validation
+    (function () {
+      'use strict';
+      var form = document.getElementById('validate');
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    })();
+
+    // Preview image
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const output = document.getElementById('imagePreview');
+        output.src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  </script>
+
+  <style>
+    .select2-selection__choice__remove {
+      margin-right: 2px;
+    }
+    .select2-selection__choice__remove::before {
+      display: none;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+      background-color: transparent;
+      border: none;
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+      color: #999;
+      cursor: pointer;
+      font-size: 21px;
+      font-weight: bold;
+      padding: 0 4px;
+      position: absolute;
+      left: -8px;
+      top: 1px;
+    }
+  </style>
+
+</body>
+</html>

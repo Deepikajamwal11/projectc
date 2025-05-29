@@ -1,0 +1,27 @@
+{
+  "name": "projectc",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./app.js"
+  },
+  "dependencies": {
+    "auto": "^11.3.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "~1.4.4",
+    "csv-parser": "^3.2.0",
+    "debug": "~2.6.9",
+    "dotenv": "^16.5.0",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-fileupload": "^1.5.1",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.18.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "multer": "^2.0.0",
+    "mysql2": "^3.14.1",
+    "nodemon": "^3.1.10",
+    "sequelize": "^6.37.7"
+  }
+}

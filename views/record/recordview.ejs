@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+  <%- include('../common/header.ejs'); %>
+
+  <body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click"
+    data-menu="vertical-menu-modern" data-col="">
+    
+    <%- include('../common/navbar.ejs'); %>
+    <%- include('../common/sidebar.ejs'); %>
+
+    <div class="app-content content">
+      <div class="content-overlay"></div>
+      <div class="header-navbar-shadow"></div>
+      <div class="content-wrapper">
+        <div class="content-body">
+          <div class="auth-wrapper">
+            <div class="auth-inner py-2">
+              <div class="card mb-0">
+                <div class="card-body">
+                  <div class="card-header d-flex justify-content-end align-items-center">
+                    
+                    <div>
+                      <a href="/recordlist" class="btn btn-primary">Back</a>
+                    </div>
+                  </div>
+                  <div class="">
+               
+
+                    <div class="card-datatable table-responsive pt-0">
+                      <table id="myTable" class="user-list-table table">
+                        <thead class="table-light">
+                          <tr>
+                            <th>Sr.no</th>
+                            <th>Code</th>
+                            <th>Task Name</th>
+                            <th>Item Code</th>
+                            <th>Description</th>
+              
+                            <th>Unit</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Material Cost</th>
+                            <th>Material Center</th>
+                            <th>Labour Hours</th>
+                            <th>Labour Cost</th>
+                            <th>Labour Cost Center</th>
+                            <th>Total</th>
+                            <th>Notes</th>
+                          
+                          </tr>
+                        </thead>
+                   
+                        <tbody>
+                          <% if (data.length === 0) { %>
+                            <tr>
+                              <td colspan="8" class="text-center fw-bold pt-2">No data found</td>
+                            </tr>
+                          <% } else { %>
+                            <% records.forEach((item, i) => { %>
+                             
+                            <tr data-id="<%= item.id %>">
+                              <td><%= offset + i + 1 %></td>
+                              <td><%= item.subtask?.projecttasksss?.workGroupCode || 'N/A' %></td>
+                              <td><%= item.subtask?.projecttasksss?.workGroup|| 'N/A' %></td>
+                              <td><%= item.subtask?.itemCode || 'N/A' %></td>
+                              <td><%= item.subtask?.discription || 'N/A' %></td>
+                              <td><%= item.subtask?.unit || 'N/A' %></td>
+                              <td><%= item.subtask?.quantity || 'N/A' %></td>
+                              <td><%= item.subtask?.rate || 'N/A' %></td>
+                              <td><%= item.subtask?.materialCost || 'N/A' %></td>
+                              <td><%= item.subtask?.meterialCenter || 'N/A' %></td>
+                              <td><%= item.subtask?.labourHours || 'N/A' %></td>
+                              <td><%= item.subtask?.labourCost || 'N/A' %></td>
+                              <td><%= item.subtask?.labourCostCenter || 'N/A' %></td>
+                              <td><%= item.subtask?.total || 'N/A' %></td>
+                              <td><%= item.subtask?.notes || 'N/A' %></td>
+                            </tr>
+                            <% }) %>
+                          <% } %>
+                        </tbody>
+                      </table>
+                      
+                      <%
+                      const maxPagesToShow = 10;
+                      let startPage = currentPage - Math.floor(maxPagesToShow / 2);
+                      if (startPage < 1) startPage = 1;
+                    
+                      let endPage = startPage + maxPagesToShow - 1;
+                      if (endPage > totalPages) {
+                        endPage = totalPages;
+                        startPage = endPage - maxPagesToShow + 1;
+                        if (startPage < 1) startPage = 1;
+                      }
+                    %>
+                    
+                    <div class="d-flex justify-content-end pt-4">
+                      <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                    
+                          <!-- Previous button -->
+                          <% if (currentPage > 1) { %>
+                            <li class="page-item">
+                              <a class="page-link" href="/recordlist?page=<%= currentPage - 1 %>&limit=<%= limit %>">Previous</a>
+                            </li>
+                          <% } else { %>
+                            <li class="page-item disabled">
+                              <a class="page-link" href="#">Previous</a>
+                            </li>
+                          <% } %>
+                    
+                          <!-- Page numbers -->
+                          <% for (let i = startPage; i <= endPage; i++) { %>
+                            <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+                              <a class="page-link" href="/recordlist?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+                            </li>
+                          <% } %>
+                    
+                          <!-- Next button -->
+                          <% if (currentPage < totalPages) { %>
+                            <li class="page-item">
+                              <a class="page-link" href="/recordlist?page=<%= currentPage + 1 %>&limit=<%= limit %>">Next</a>
+                            </li>
+                          <% } else { %>
+                            <li class="page-item disabled">
+                              <a class="page-link" href="#">Next</a>
+                            </li>
+                          <% } %>
+                    
+                        </ul>
+                      </nav>
+                    </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    
+                    <!-- End Pagination -->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../common/footer.ejs'); %>
+
+    <script src="/app-assets/vendors/js/vendors.min.js"></script>
+    <script src="/app-assets/js/core/app-menu.js"></script>
+    <script src="/app-assets/js/core/app.js"></script>
+    
+    <script>
+      window.addEventListener('load', () => {
+        if (feather) {
+          feather.replace();
+        }
+      });
+    </script>
+  </body>
+</html>

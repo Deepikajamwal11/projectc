@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+
+<head>
+  <%- include('../common/header.ejs'); %>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+
+    <style>
+      .card-datatable {
+        padding: 20px;
+      }
+
+      .status-pending {
+        background-color: rgb(110, 95, 95);
+        color: black;
+      }
+
+      .status-Ongoing {
+        background-color: rgb(228, 228, 201);
+        color: white;
+      }
+
+      .status-Completed {
+        background-color: rgb(169, 228, 169);
+        color: white;
+      }
+
+      .status-dropdown {
+        padding: 4px 6px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+    </style>
+
+</head>
+
+<body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click"
+  data-menu="vertical-menu-modern" data-col="">
+  <%- include('../common/navbar.ejs'); %>
+    <%- include('../common/sidebar.ejs'); %>
+
+      <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper p-0">
+          <div class="content-header row"></div>
+          <div class="content-body">
+            <section class="app-user-list">
+              <div class="card">
+                <div class="card-header d-flex justify-content-end align-items-center">
+                  <div class="table_search d-flex align-items-center mx-2">
+                    <label for="searchInput" class="me-1 mb-0">Search</label>
+                    <input type="search" id="searchInput" class="form-control" placeholder="Search" />
+                  </div>
+                  <!-- <div>
+                  <a href="/describeworkadd" class="btn btn-primary">Add</a>
+                </div> -->
+                </div>
+
+                <div class="card-datatable table-responsive pt-0">
+                  <table id="myTable" class="user-list-table table">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Sr.no</th>
+                        <th>Employee Name</th>
+                        <th>Project Name</th>
+                        <!-- <th>Notes</th> -->
+                        <th>In Time</th>
+                        <th>Image</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                 
+                    <tbody>
+                      <% if (data.length === 0) { %>
+                        <tr>
+                          <td colspan="8" class="text-center fw-bold pt-2">No data found</td>
+                        </tr>
+                      <% } else { %>
+                        <% data.forEach((item, i) => { %>
+                          <tr data-id="<%= item.id %>">
+                            <td>
+                              <%= offset + i + 1 %>
+                            </td>
+                            <td>
+                              <%= item.assignUsers?.usersss?.name || 'N/A' %>
+                            </td>
+                            <td>
+                              <%= item.assignUsers?.projectsss?.name || 'N/A' %>
+                            </td>
+  
+                            <!-- <td>
+                              <%= item.addNotes || 'N/A' %>
+                            </td> -->
+  
+                            <td>
+                              <%= item.clockIn || 'N/A' %>
+                            </td>
+                            <td>
+                              <% if (Array.isArray(item.imagess) && item.imagess.length> 0) { %>
+                                <img src="../<%= item.imagess[0].image %>" alt="Image 1"
+                                  style="width: 50px; height: 50px; object-fit: cover; border-radius: 10px; margin-right: 5px;" />
+                                <% } else { %>
+                                  <span>N/A</span>
+                                  <% } %>
+                            </td>
+  
+  
+                            <td>
+                              <select class="statuschange status-dropdown
+                                         <% if (item.status == '0') { %>status-pending<% } %>
+                                         <% if (item.status == '1') { %>status-Ongoing<% } %>
+                                         <% if (item.status == '2') { %>status-Completed<% } %>"
+                                data-id="<%= item.id %>">
+                                <option value="0" <% if(item.status==0){ %> selected <% } %>>Pending</option>
+                                <option value="1" <% if(item.status==1){ %> selected <% } %>>Ongoing</option>
+                                <option value="2" <% if(item.status==2){ %> selected <% } %>>Completed</option>
+                              </select>
+                            </td>
+                            <td>
+                              <a href="/describeworkdetails/<%= item.id %>" class="btn btn-primary"
+                                data-bs-toggle="tooltip" title="View">
+                                <i data-feather="eye"></i>
+                              </a>
+                              <!-- <a
+                            href="/describeworkaedit/<%= item.id %>"
+                            class="btn btn-primary"
+                            data-bs-toggle="tooltip"
+                            title="Edit"
+                          >
+                            <i data-feather="edit"></i>
+                          </a> -->
+                              <a href="#" onclick="deleteUser('<%= item.id %>', event)" class="btn btn-danger"
+                                data-bs-toggle="tooltip" title="Delete">
+                                <i data-feather="trash"></i>
+                              </a>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      <% } %>
+                    </tbody>
+                  </table>
+                  <%
+                  const maxPagesToShow = 10;
+                  let startPage = currentPage - Math.floor(maxPagesToShow / 2);
+                  if (startPage < 1) startPage = 1;
+                
+                  let endPage = startPage + maxPagesToShow - 1;
+                  if (endPage > totalPages) {
+                    endPage = totalPages;
+                    startPage = endPage - maxPagesToShow + 1;
+                    if (startPage < 1) startPage = 1;
+                  }
+                %>
+                
+                <div class="d-flex justify-content-end pt-4">
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                
+                      <!-- Previous button -->
+                      <% if (currentPage > 1) { %>
+                        <li class="page-item">
+                          <a class="page-link" href="/describeworklist?page=<%= currentPage - 1 %>&limit=<%= limit %>">Previous</a>
+                        </li>
+                      <% } else { %>
+                        <li class="page-item disabled">
+                          <a class="page-link" href="#">Previous</a>
+                        </li>
+                      <% } %>
+                
+                      <!-- Page numbers -->
+                      <% for (let i = startPage; i <= endPage; i++) { %>
+                        <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+                          <a class="page-link" href="/describeworklist?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+                        </li>
+                      <% } %>
+                
+                      <!-- Next button -->
+                      <% if (currentPage < totalPages) { %>
+                        <li class="page-item">
+                          <a class="page-link" href="/describeworklist?page=<%= currentPage + 1 %>&limit=<%= limit %>">Next</a>
+                        </li>
+                      <% } else { %>
+                        <li class="page-item disabled">
+                          <a class="page-link" href="#">Next</a>
+                        </li>
+                      <% } %>
+                
+                    </ul>
+                  </nav>
+                </div>
+                
+                </div>
+
+              </div>
+
+              <!-- list section end -->
+            </section>
+            <!-- users list ends -->
+          </div>
+        </div>
+      </div>
+      <!-- END: Content-->
+
+      <div class="sidenav-overlay"></div>
+      <div class="drag-target"></div>
+
+      <!-- BEGIN: Footer-->
+
+      <!-- END: Footer-->
+      <%- include('../common/footer.ejs'); %>
+
+        <!-- BEGIN: Vendor JS-->
+        <script src="../../../app-assets/vendors/js/vendors.min.js"></script>
+        <!-- END: Vendor JS-->
+
+        <!-- BEGIN: Page Vendor JS-->
+        <script src="../../../app-assets/vendors/js/charts/apexcharts.min.js"></script>
+        <script src="../../../app-assets/vendors/js/extensions/toastr.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- Added SweetAlert2 CDN -->
+        <!-- END: Page Vendor JS-->
+
+        <!-- BEGIN: Theme JS-->
+        <script src="../../../app-assets/js/core/app-menu.js"></script>
+        <script src="../../../app-assets/js/core/app.js"></script>
+        <!-- END: Theme JS-->/deleteproject
+
+        <!-- BEGIN: Page JS-->
+        <script src="../../../app-assets/js/scripts/pages/dashboard-ecommerce.js"></script>
+
+        <!-- END: Page JS-->
+
+        <script>
+
+
+          $(document).on('change', '.statuschange', function () {
+            const status = $(this).val();
+            const id = $(this).data('id');
+
+            $.ajax({
+              url: '/describeworkstatus',
+              method: 'POST',
+              data: { id, status },
+              success: function (response) {
+                if (response.success) {
+                  toastr.success("Status updated successfully.");
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 1000);
+                } else {
+                  toastr.error("Failed to update status.");
+                }
+              },
+              error: function () {
+                toastr.error("An error occurred.");
+              }
+            });
+          });
+          function deleteUser(user_id, event) {
+            event.preventDefault();
+
+            const swalWithBootstrapButtons = Swal.mixin({
+              customClass: {
+                confirmButton: "btn btn-primary",
+                cancelButton: "btn btn-danger",
+              },
+              buttonsStyling: false,
+            });
+
+            swalWithBootstrapButtons
+              .fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: false,
+              })
+              .then((result) => {
+                if (result.isConfirmed) {
+                  $.ajax({
+                    type: "POST",
+                    url: `/deletedescribework/${user_id}`,
+                    data: {
+                      id: user_id,
+                    },
+                    success: function (response) {
+                      if (response.success) {
+                        swalWithBootstrapButtons
+                          .fire({
+                            title: "Deleted!",
+                            text: "The describe work has been deleted.",
+                            icon: "success",
+                          })
+                          .then(() => {
+                            location.reload();
+                          });
+
+                      } else {
+                        swalWithBootstrapButtons.fire({
+                          title: "Error!",
+                          text: "Something went wrong.",
+                          icon: "error",
+                        });
+                      }
+                    },
+                    error: function () {
+                      swalWithBootstrapButtons.fire({
+                        title: "Error!",
+                        text: "An error occurred while deleting the describe work",
+                        icon: "error",
+                      });
+                    },
+                  });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                  swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: "The describe work is safe",
+                    icon: "error",
+                  });
+                }
+              });
+          }
+        </script>
+        <script>
+          feather.replace(); // Important: Initializes feather icons
+        </script>
+</body>
+<!-- END: Body-->
+
+</html>

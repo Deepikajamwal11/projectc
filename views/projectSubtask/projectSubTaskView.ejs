@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<%- include('../common/header.ejs'); %>
+
+  <body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click"
+    data-menu="vertical-menu-modern" data-col="">
+    <%- include('../common/navbar.ejs'); %>
+      <%- include('../common/sidebar.ejs'); %>
+
+
+        <div class="app-content content">
+          <div class="content-overlay"></div>
+          <div class="header-navbar-shadow"></div>
+          <div class="content-wrapper">
+            <div class="content-body">
+              <div class="auth-wrapper">
+                <div class="auth-inner py-2">
+                  <div class="card mb-0">
+                    <div class="card-body">
+                      <form id="validate" class="auth-register-form"  method="POST" enctype="multipart/form-data" novalidate>
+
+                     
+                        <div class="mb-1">
+                            <label for="projectName" class="form-label">Project Name</label>
+                            <input type="text" class="form-control" id="projectName" value="<%= data.task && data.task.projects ? data.task.projects.name : 'N/A' %>" readonly />
+                          </div>
+                          <div class="mb-1">
+                            <label for="workGroup" class="form-label">Work Group</label>
+                            <input type="text" class="form-control" id="workGroup" value="<%= data.task ? data.task.workGroup : 'N/A' %>" readonly />
+                          </div>
+        
+                          
+                          <div class="mb-1">
+                            <label for="workGroupCode" class="form-label">Work Group Code</label>
+                            <input type="text" class="form-control" id="workGroupCode" value="<%= data.task ? data.task.workGroupCode : 'N/A' %>" readonly />
+                          </div>
+                      
+                        <div class="mb-1">
+                          <label for="itemCode" class="form-label">Item Code</label>
+                          <input type="text" class="form-control" name="itemCode" readonly value="<%= data.itemCode %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="discription" class="form-label">Description</label>
+                          <textarea class="form-control" name="notes" readonly ><%= data.discription %></textarea>
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="unit" class="form-label">Unit</label>
+                          <input type="text" class="form-control" name="unit" readonly value="<%= data.unit %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="quantity" class="form-label">Quantity</label>
+                          <input type="text" class="form-control" name="quantity" readonly value="<%= data.quantity %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="rate" class="form-label">Rate</label>
+                          <input type="text" class="form-control" name="rate" readonly value="<%= data.rate %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="materialCost" class="form-label">Material Cost</label>
+                          <input type="text" class="form-control" name="materialCost" readonly value="<%= data.materialCost %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="meterialCenter" class="form-label">Material Center</label>
+                          <input type="text" class="form-control" name="meterialCenter" readonly value="<%= data.meterialCenter %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="labourHours" class="form-label">Labour Hours</label>
+                          <input type="text" class="form-control" name="labourHours" readonly value="<%= data.labourHours %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="labourCost" class="form-label">Labour Cost</label>
+                          <input type="text" class="form-control" name="labourCost" readonly value="<%= data.labourCost %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="labourCostCenter" class="form-label">Labour Cost Center</label>
+                          <input type="text" class="form-control" name="labourCostCenter" readonly value="<%= data.labourCostCenter %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="total" class="form-label">Total</label>
+                          <input type="text" class="form-control" name="total" readonly value="<%= data.total %>">
+                        </div>
+                      
+                        <div class="mb-1">
+                          <label for="notes" class="form-label">Notes</label>
+                          <textarea class="form-control" name="notes" readonly ><%= data.notes %></textarea>
+                        </div>
+                      
+                        <div class="d-flex justify-content-end">
+                          <a class="btn btn-secondary" href="/subtasklist">Back</a>
+                        </div>
+                      
+                      </form>
+                      
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%- include('../common/footer.ejs'); %>
+
+          <script src="../../../app-assets/vendors/js/vendors.min.js"></script>
+          <script src="../../../app-assets/js/core/app-menu.js"></script>
+          <script src="../../../app-assets/js/core/app.js"></script>
+         
+
+          <script>
+            (function () {
+              'use strict';
+              var form = document.getElementById('validate');
+
+              form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            })();
+          </script>
+
+
+          
+          <script>
+            feather.replace(); // Important: Initializes feather icons
+          </script>
+          
+
+  </body>
+
+</html>

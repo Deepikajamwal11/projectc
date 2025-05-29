@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+
+<head>
+  <%- include('../common/header.ejs'); %>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <style>
+      .card-datatable {
+        padding: 20px;
+      }
+    </style>
+</head>
+
+<body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click"
+  data-menu="vertical-menu-modern" data-col="">
+  <%- include('../common/navbar.ejs'); %>
+    <%- include('../common/sidebar.ejs'); %>
+
+      <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper p-0">
+          <div class="content-header row"></div>
+          <div class="content-body">
+            <section class="app-user-list">
+              <div class="card">
+                <div class="card-header d-flex justify-content-end align-items-center">
+                  <div class="table_search d-flex align-items-center mx-2">
+                    <label for="searchInput" class="me-1 mb-0">Search</label>
+                    <input type="search" id="searchInput" class="form-control" placeholder="Search" />
+                  </div>
+                  <!-- <div>
+                  <a href="/subtaskadd" class="btn btn-primary">Add</a>
+                </div> -->
+                </div>
+
+                <div class="card-datatable table-responsive pt-0">
+                  <table id="myTable" class="user-list-table table">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Sr.no</th>
+                        <th>Project Name</th>
+                        <th>Project Task</th>
+                        <th>Item Code</th>
+
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% if (data.length === 0) { %>
+                        <tr>
+                          <td colspan="6" class="text-center fw-bold pt-2">No data found</td>
+                        </tr>
+                      <% } else { %>
+                        <% data.forEach((item, i) => { %>
+                          <tr data-id="<%= item.id %>">
+                            <td><%= offset + i + 1 %></td>
+                            <td><%= item.task && item.task.projects ? item.task.projects.name : 'N/A' %></td>
+                            <td><%= item.task ? item.task.workGroup : 'N/A' %></td>
+                            <td><%= item.itemCode %></td>
+                            <td>
+                              <% if (item.status == 0) { %>
+                                <button data-id="<%= item.id %>" data-status="0" class="btn btn-danger status-toggle">Inactive</button>
+                              <% } else { %>
+                                <button data-id="<%= item.id %>" data-status="1" class="btn btn-primary status-toggle">Active</button>
+                              <% } %>
+                            </td>
+                            <td>
+                              <a href="/subtaskdetails/<%= item.id %>" class="btn btn-sm btn-primary" title="View"><i data-feather="eye"></i></a>
+                              <button class="btn btn-sm btn-danger" onclick="deleteUser('<%= item.id %>', event)" title="Delete"><i data-feather="trash"></i></button>
+                            </td>
+                          </tr>
+                        <% }) %>
+                      <% } %>
+                    </tbody>
+                    
+                  </table>
+                </div>
+
+                <% const maxPagesToShow=10; let startPage=currentPage - Math.floor(maxPagesToShow / 2); if (startPage <
+                  1) startPage=1; let endPage=startPage + maxPagesToShow - 1; if (endPage> totalPages) {
+                  endPage = totalPages;
+                  startPage = endPage - maxPagesToShow + 1;
+                  if (startPage < 1) startPage=1; } %>
+
+                    <div class="d-flex justify-content-end pt-4">
+                      <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+
+                          <!-- Previous button -->
+                          <% if (currentPage> 1) { %>
+                            <li class="page-item">
+                              <a class="page-link"
+                                href="/subtasklist?page=<%= currentPage - 1 %>&limit=<%= limit %>">Previous</a>
+                            </li>
+                            <% } else { %>
+                              <li class="page-item disabled">
+                                <a class="page-link" href="#">Previous</a>
+                              </li>
+                              <% } %>
+
+                                <!-- Page numbers -->
+                                <% for (let i=startPage; i <=endPage; i++) { %>
+                                  <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+                                    <a class="page-link" href="/subtasklist?page=<%= i %>&limit=<%= limit %>">
+                                      <%= i %>
+                                    </a>
+                                  </li>
+                                  <% } %>
+
+                                    <!-- Next button -->
+                                    <% if (currentPage < totalPages) { %>
+                                      <li class="page-item">
+                                        <a class="page-link"
+                                          href="/subtasklist?page=<%= currentPage + 1 %>&limit=<%= limit %>">Next</a>
+                                      </li>
+                                      <% } else { %>
+                                        <li class="page-item disabled">
+                                          <a class="page-link" href="#">Next</a>
+                                        </li>
+                                        <% } %>
+
+                        </ul>
+                      </nav>
+                    </div>
+
+
+
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidenav-overlay"></div>
+      <div class="drag-target"></div>
+
+      <%- include('../common/footer.ejs'); %>
+
+        <!-- Scripts -->
+        <script src="../../../app-assets/vendors/js/vendors.min.js"></script>
+        <script src="../../../app-assets/vendors/js/charts/apexcharts.min.js"></script>
+        <script src="../../../app-assets/vendors/js/extensions/toastr.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="../../../app-assets/js/core/app-menu.js"></script>
+        <script src="../../../app-assets/js/core/app.js"></script>
+        <script src="../../../app-assets/js/scripts/pages/dashboard-ecommerce.js"></script>
+
+        <script>
+
+
+          $(document).ready(function () {
+            $(document).on("click", ".status-toggle", function () {
+              let button = $(this);
+              let userId = button.attr("data-id");
+              let currentStatus = button.attr("data-status");
+              let newStatus = currentStatus === "1" ? "0" : "1";
+
+              $.ajax({
+                method: "POST",
+                url: "/projectsubtaskstatus",
+                data: {
+                  id: userId,
+                  status: newStatus,
+                },
+                success: function (response) {
+                  if (response.success) {
+                    if (newStatus === "1") {
+                      button
+                        .text("Active")
+                        .removeClass("btn-danger")
+                        .addClass("btn-primary");
+                    } else {
+                      button
+                        .text("Inactive")
+                        .removeClass("btn-primary")
+                        .addClass("btn-danger");
+                    }
+                    button.attr("data-status", newStatus);
+                    toastr.success("Status updated successfully.");
+                  } else {
+                    toastr.error("Status change failed.");
+                  }
+                },
+                error: function () {
+                  toastr.error("An error occurred while changing the status.");
+                },
+              });
+            });
+          });
+
+          function deleteUser(user_id, event) {
+            event.preventDefault();
+
+            const swalWithBootstrapButtons = Swal.mixin({
+              customClass: {
+                confirmButton: "btn btn-primary",
+                cancelButton: "btn btn-danger",
+              },
+              buttonsStyling: false,
+            });
+
+            swalWithBootstrapButtons
+              .fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: false,
+              })
+              .then((result) => {
+                if (result.isConfirmed) {
+                  $.ajax({
+                    type: "POST",
+                    url: `/deletesubtaskproject/${user_id}`,
+                    data: {
+                      id: user_id,
+                    },
+                    success: function (response) {
+                      if (response.success) {
+                        swalWithBootstrapButtons
+                          .fire({
+                            title: "Deleted!",
+                            text: "The project task has been deleted.",
+                            icon: "success",
+                          })
+                          .then(() => {
+                            location.reload();
+                          });
+
+                      } else {
+                        swalWithBootstrapButtons.fire({
+                          title: "Error!",
+                          text: "Something went wrong.",
+                          icon: "error",
+                        });
+                      }
+                    },
+                    error: function () {
+                      swalWithBootstrapButtons.fire({
+                        title: "Error!",
+                        text: "An error occurred while deleting the project task",
+                        icon: "error",
+                      });
+                    },
+                  });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                  swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: "The project task is safe",
+                    icon: "error",
+                  });
+                }
+              });
+          }
+        </script>
+</body>
+
+</html>

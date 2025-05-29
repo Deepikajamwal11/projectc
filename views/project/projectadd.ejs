@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<%- include('../common/header.ejs'); %>
+
+  <body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click"
+    data-menu="vertical-menu-modern" data-col="">
+    <%- include('../common/navbar.ejs'); %>
+      <%- include('../common/sidebar.ejs'); %>
+
+        <div class="app-content content">
+          <div class="content-overlay"></div>
+          <div class="header-navbar-shadow"></div>
+          <div class="content-wrapper">
+            <div class="content-body">
+              <div class="auth-wrapper">
+                <div class="auth-inner py-2">
+                  <div class="card mb-0">
+                    <div class="card-body">
+
+                      <form id="validate" class="auth-register-form" action="/createproject" method="POST"
+                        enctype="multipart/form-data" novalidate>
+                        <div class="mb-1 col-3">
+                          <label for="image" class="form-label">Image</label>
+                          <div id="imagePreview" class="col-12">
+                              <img id="preview" src="" alt="Preview Image" class="mb-1" style="display: none; width: 100%; height: 310px; object-fit: cover; border-radius: 10%;" />
+                          </div>
+                          <input type="file" class="form-control" id="image" name="image" onchange="previewImage(event)" required/>
+                          <div class="invalid-feedback">Please upload a valid image file</div>
+                      </div>
+
+                        <div class="mb-1">
+                          <label for="name" class="form-label">Name</label>
+                          <input type="text" class="form-control" id="name" name="name" placeholder="Enter name"
+                            minlength="2" maxlength="50" oninput="this.value = this.value.replace(/^\s+/g, '');"
+                            required />
+                          <div class="invalid-feedback">Please enter a project name.</div>
+                        </div>
+
+                        <div class="mb-1 mt-1">
+                          <label for="userIds" class="form-label">Assign Users</label>
+                          <select id="userIds" name="userIds" class="form-control select2" multiple required>
+                            <% users.forEach(user=> { %>
+                              <option value="<%= user.id %>">
+                                <%= user.name %>
+                              </option>
+                              <% }) %>
+                          </select>
+                          <div class="invalid-feedback">Please select at least one user.</div>
+                        </div>
+                        <div class="mb-1">
+                          <label for="location" class="form-label">Location</label>
+                          <input type="text" class="form-control" id="location" name="location" placeholder="Enter location"
+                            minlength="2" maxlength="50" oninput="this.value = this.value.replace(/^\s+/g, '');" required  />
+                          <div class="invalid-feedback">Please enter a location.</div>
+                        </div>
+      
+                       
+                        <div class="mb-1">
+                          <label for="discription" class="form-label">Description</label>
+                          <textarea
+                            class="form-control"
+                            id="discription"
+                            name="discription"
+                            placeholder="Enter description"
+                            minlength="2"
+                            maxlength="50"
+                            oninput="this.value = this.value.replace(/^\s+/g, '');"
+                            required
+                            rows="3"
+                          ></textarea>
+                          <div class="invalid-feedback">Please enter a description.</div>
+                        </div>
+                        
+                        <div class="mb-1 mt-1"> 
+                          <label for="excelFile" class="form-label">Upload CSV File</label>
+                          <input type="file" class="form-control" name="excelFile" id="excelFile" accept=".csv"
+                            required />
+                          <div class="invalid-feedback">Please upload a CSV file.</div>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                          <button type="submit" class="btn btn-primary mx-2">Add</button>
+                          <a class="btn btn-primary" href="/projectlist">Back</a>
+                        </div>
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%- include('../common/footer.ejs'); %>
+
+          <script src="../../../app-assets/vendors/js/vendors.min.js"></script>
+          <script src="../../../app-assets/js/core/app-menu.js"></script>
+          <script src="../../../app-assets/js/core/app.js"></script>
+
+          <!-- Select2 CSS & JS -->
+          <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+          <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+          <script>
+            $(document).ready(function () {
+              $('#userIds').select2({
+                placeholder: "Select users",
+                allowClear: true,
+                width: '100%'
+              });
+            });
+          </script>
+
+          <script>
+            (function () {
+              'use strict';
+              var form = document.getElementById('validate');
+
+              form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            })();
+   
+          </script>
+
+          <script>
+            $(window).on("load", function () {
+              if (feather) {
+                feather.replace({ width: 14, height: 14 });
+              }
+            });
+          </script>
+            <script>     function previewImage(event) {
+              const preview = document.getElementById('preview');
+              const file = event.target.files[0];
+              const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+              const maxSize = 2 * 1024 * 1024; 
+  
+              if (file) {
+                  if (!allowedTypes.includes(file.type)) {
+                      alert('Please upload a valid image file (JPEG/PNG).');
+                      event.target.value = '';
+                      preview.style.display = 'none';
+                      return;
+                  }
+  
+                  const reader = new FileReader();
+                  reader.onload = function(e) {
+                      preview.src = e.target.result;
+                      preview.style.display = 'block';
+                  };
+                  reader.readAsDataURL(file);
+              } else {
+                  preview.style.display = 'none';
+              }
+          }</script>
+
+          <style>
+            .select2-selection__choice__remove {
+              margin-right: 2px;
+            }
+
+            .select2-selection__choice__remove::before {
+              display: none;
+            }
+
+            .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+              background-color: transparent;
+              border: none;
+              border-top-left-radius: 4px;
+              border-bottom-left-radius: 4px;
+              color: #999;
+              cursor: pointer;
+              font-size: 21px;
+              font-weight: bold;
+              padding: 0 4px;
+              position: absolute;
+              left: -8px;
+              top: 1px;
+            }
+          </style>
+
+  </body>
+
+</html>
